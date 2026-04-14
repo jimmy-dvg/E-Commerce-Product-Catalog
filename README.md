@@ -1,73 +1,88 @@
-# React + TypeScript + Vite
+# E-Commerce Product Catalog
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Simple product catalog browser built with React, Vite, TypeScript, Tailwind CSS, React Router, and Supabase.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19 + TypeScript
+- Vite
+- Tailwind CSS (v4 via `@tailwindcss/vite`)
+- React Router
+- Supabase (Postgres + RLS)
 
-## React Compiler
+## Implemented Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Shared app layout with reusable navbar
+- Home page with welcome text and featured products
+- Catalog page with:
+  - product cards
+  - keyword search (title/description)
+  - pagination (6 items per page)
+- Product Details page with full product info
+- Supabase products table + seed data via migration
 
-## Expanding the ESLint configuration
+## Routes
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- `/` Home
+- `/products` Catalog
+- `/product/:id` Product details
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Database
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Migration file:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- `supabase/migrations/202604140001_create_products.sql`
+
+What it does:
+
+- Creates `public.products`
+- Enables RLS on `products`
+- Adds simple public read policy (`anon`, `authenticated`)
+- Inserts 20 sample products
+
+## Environment Setup
+
+Copy the values from your Supabase project into `.env`:
+
+```env
+VITE_SUPABASE_URL=...
+VITE_SUPABASE_ANON_KEY=...
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+An example file is included at `.env.example`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Install and Run
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
+```
+
+App runs at http://localhost:5173
+
+## Build
+
+```bash
+npm run build
+```
+
+## Project Structure
+
+```text
+src/
+  components/
+    Navbar.tsx
+    ProductCard.tsx
+  layouts/
+    AppLayout.tsx
+  lib/
+    supabase.ts
+  pages/
+    HomePage.tsx
+    ProductCatalogPage.tsx
+    ProductDetailsPage.tsx
+  types/
+    product.ts
+  App.tsx
+  main.tsx
 ```
